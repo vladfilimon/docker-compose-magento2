@@ -1,0 +1,76 @@
+version: '3.7'
+services:
+  cache:
+    build: ./.docker/redis        
+  apache:
+    build: ./.docker/apache
+    depends_on:
+      - db
+      - cache
+    links:
+      - db
+      - cache
+      - sessions
+    volumes:
+      - type: bind
+        source: ./magento2
+        target: /var/www/html
+        consistency: delegated
+        #      - ~/.composer/auth.json:/root/.composer/auth.json
+  varnish:
+    build: ./.docker/varnish
+    ports:
+      - "80:80"
+      - "6082:6082"
+    depends_on:
+      - apache
+    links:
+      - apache
+    volumes:
+      - ./.docker/varnish/default.vcl:/etc/varnish/default.vcl
+      - ./.docker/varnish/varnish.secret:/etc/varnish/secret
+    environment:
+      - CACHE_SIZE=256M
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    volumes:
+      - type: volume
+        source: dbdata
+        target: /var/lib/mysql
+        consistency: delegated
+    environment:
+      - MYSQL_ROOT_PASSWORD=magento2
+      - MYSQL_DATABASE=magento2
+      - MYSQL_USER=magento2
+      - MYSQL_PASSWORD=magento2
+
+  sessions:
+    image: redis
+
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearchdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1025"
+      - "1080:1080"
+volumes:
+  dbdata:
+  elasticsearchdata:
+    driver: local
