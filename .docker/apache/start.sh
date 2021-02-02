@@ -6,14 +6,6 @@ function custom_terminate() {
   exit 0
 }
 
-if [ ! -f /var/www/html/fb_host_probe.txt ]; then
-    echo "server active" > /var/www/html/fb_host_probe.txt
-fi
-
-if [ ! -f /var/www/html/pub/fb_host_probe.txt ]; then
-    echo "server active" > /var/www/html/pub/fb_host_probe.txt
-fi
-
 rm -f /var/run/apache2/apache2.pid
 service apache2 start
 
