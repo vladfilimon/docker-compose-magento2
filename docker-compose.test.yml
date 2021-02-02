@@ -13,8 +13,9 @@ services:
       - sessions
     volumes:
       - type: volume
-          source: ./magento2
-          target: /var/www/html
+        source: ./magento2
+        target: /var/www/html
+        consistency: deletated
         #      - ~/.composer/auth.json:/root/.composer/auth.json
   varnish:
     build: ./.docker/varnish
