@@ -13,7 +13,7 @@ services:
       - sessions
     volumes:
       - ./magento2:/var/www/html
- varnish:
+  varnish:
     build: ./.docker/varnish
     ports:
       - "80:80"
