@@ -12,11 +12,8 @@ services:
       - cache
       - sessions
     volumes:
-      - type: volume
-        source: ./magento2
-        target: /var/www/html
-        #      - ~/.composer/auth.json:/root/.composer/auth.json
-  varnish:
+      - ./magento2:/var/www/html
+ varnish:
     build: ./.docker/varnish
     ports:
       - "80:80"
