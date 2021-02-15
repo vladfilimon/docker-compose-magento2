@@ -19,7 +19,8 @@ RUN apt-get update \
 
 RUN ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/local/include/
 RUN pecl install mcrypt-1.0.3
-RUN docker-php-ext-enable mcrypt
+RUN pecl install xdebug-2.8.1
+RUN docker-php-ext-enable mcrypt xdebug
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 RUN docker-php-ext-install -j$(nproc) \
     gd \
