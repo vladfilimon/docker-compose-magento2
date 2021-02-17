@@ -65,6 +65,21 @@ services:
     ports:
       - 9200:9200
 
+  bitcoin:
+    image: ruimarinho/bitcoin-core:0.15.1
+    command:
+      -printtoconsole
+      -regtest=1
+      -rpcallowip=0.0.0.0/0
+      -rpcbind=0.0.0.0
+      -rpcuser=user
+      -rpcpassword=lZgaqHvHyQz5zCExqONVJGi9B1WAcs7EXCyN1KdqeEw=
+    restart: always
+    ports:
+      - "18332:18332"
+      - "18443:18443"
+      - "18444:18444"
+
   mailcatcher:
     image: schickling/mailcatcher
     ports:
